@@ -8,8 +8,9 @@
 	- [Getting Started ](#getting-started-)
 		- [Prerequisites](#prerequisites)
 		- [Steps ](#steps-)
-			- [Step 1 - AWS Console](#step-1---aws-console)
+			- [Step 1 - Set up EC2, IAM roles](#step-1---set-up-ec2-iam-roles)
 			- [Step 2 - Configure GitHub Actions using OIDC](#step-2---configure-github-actions-using-oidc)
+			- [Step 3 - Set up CodeDeploy](#step-3---set-up-codedeploy)
 	- [Usage ](#usage-)
 
 ## About <a name = "about"></a>
@@ -28,7 +29,7 @@ See [OIDC](https://docs.github.com/en/actions/deployment/security-hardening-your
 
 ### Steps <a name = "steps"></a>
 
-#### Step 1 - AWS Console
+#### Step 1 - Set up EC2, IAM roles
 
 1. Login to AWS console and go to **_EC2 dashboard_**.
 2. Click on **_Launch Template_** under Instances. A _launch template_ allows you to create a saved instance configuration that can be reused, shared and launched at a later time.
@@ -100,7 +101,24 @@ systemctl start node-api.service
 3. Click on _Add Provider_. We have the provider created.
 4. We have to assign a role to this provider. Go to IAM -> Roles. Create a role named with S3FullAccess and CodeDeployFullAccess to the identity provider. As this role will be used in GitHub Actions, you can name this role as "GitHub-Actions-Deploy-Role". (_Note-_ Role name can be as per your choice)
 5. Create a GitHub Actions YAML file in your project's workflow (.github/workflows) which manages the CI/CD.
-6. This Actions file contains one secret (IAMROLE_GITHUB) which needs to be added to GitHub's settings.<br /> For this go to your repo's Settings -> scroll down to Security -> Secrets -> Actions. Click on _New repository secret_, get the _arn_ of "GitHub-Actions-Deploy-Role" and paste it here. This secret will be accessed in the workflow.
+6. This Actions file contains one secret (IAMROLE*GITHUB) which needs to be added to GitHub's settings.<br /> For this go to your repo's Settings -> scroll down to Security -> Secrets -> Actions. Click on \_New repository secret*, get the _arn_ of "GitHub-Actions-Deploy-Role" and paste it here. This secret will be accessed in the workflow.<br />
+   The GitHub Actions is ready and we need to next setup CodeDeploy.
+
+#### Step 3 - Set up CodeDeploy
+
+1. Go to CodeDeploy inside AWS Console.
+2. Click on _Applications -> Create Application_.
+3. Give the _Application Name_ as the one (--application-name) which you have specified in your GitHub Action's YAML file in your project's workflow folder. In our case it is `node-app`. <br />
+   _Note-_ All the names for the CodeDeploy part are pre-configured in the YAML file at the `run` section at the end. The names in the file and those in CodeDeploy should match, otherwise it will give an error while running.
+4. Compute Platform will be _EC2/On-premises_. Click on Create Application.
+5. App is successfully created. Next click on _Create Deployment Group_ in the application.
+6. The deployment group name will also be taken from the YAML file. In our case (--deployment-group-name), it is `ec2-app`.
+7. Add the arn for the IAM Service role. you have created for CodeDeploy.
+8. Keep the default in-place selection for Deployment Type.
+9. Select the EC2 instance by it's `Name` key which we had set as `node-server`. When you select this, it should show the Matching instances. If this was your first instance with this key, it will say, `1 unique matched instance`.
+10. In AWS CodeDeploy Agent, select _Never_ as we will be deploying the code using User Data.
+11. In Deployment Settings, _CodeDeploy.DefaultAllAtOnce_ should be selected.
+12. Uncheck the Load Balancer, as we won't be using it in the start.
 
 ## Usage <a name = "usage"></a>
 
