@@ -113,12 +113,12 @@ systemctl start node-api.service
 4. Compute Platform will be _EC2/On-premises_. Click on Create Application.
 5. App is successfully created. Next click on _Create Deployment Group_ in the application.
 6. The deployment group name will also be taken from the YAML file. In our case (--deployment-group-name), it is `ec2-app`.
-7. Add the arn for the IAM Service role. you have created for CodeDeploy.
+7. Create a role for CodeDeployService in IAM which includes permission for deploying to EC2, S3. Copy the arn for the IAM Service role and paste it in Service Role.
 8. Keep the default in-place selection for Deployment Type.
 9. Select the EC2 instance by it's `Name` key which we had set as `node-server`. When you select this, it should show the Matching instances. If this was your first instance with this key, it will say, `1 unique matched instance`.
 10. In AWS CodeDeploy Agent, select _Never_ as we will be deploying the code using User Data.
 11. In Deployment Settings, _CodeDeploy.DefaultAllAtOnce_ should be selected.
-12. Uncheck the Load Balancer, as we won't be using it in the start.
+12. Uncheck the Load Balancer, as we won't be using it. Click on _Create Deployment Group_.
 
 ## Usage <a name = "usage"></a>
 
