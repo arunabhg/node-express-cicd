@@ -9,6 +9,7 @@
 		- [Prerequisites](#prerequisites)
 		- [Steps ](#steps-)
 			- [Step 1 - AWS Console](#step-1---aws-console)
+			- [Step 2 - Configure GitHub Actions using OIDC](#step-2---configure-github-actions-using-oidc)
 	- [Usage ](#usage-)
 
 ## About <a name = "about"></a>
@@ -83,6 +84,23 @@ systemctl start node-api.service
 ```
 
 15. Click on Create Launch Template to successfully create the template.
+16. We can create multiple versions of the template to use a default version.
+17. To create an instance from this template, select the template, go to _Actions_ -> _Launch instance from template_. Keep everything default and click on _Launch Instance_ to create a new server instance. <br />
+    The EC2 instance created will have a name of _node-server_ which we had specified in the resource tag (in Step 9).
+
+#### Step 2 - Configure GitHub Actions using OIDC
+
+1. Go to AWS Console -> IAM -> Identity Provider. Click on _Add Provider_.
+2. Select OpenID Connect.
+
+- For the provider role, use: `https://token.actions.githubusercontent.com`
+  Get the thumbprint.
+- For the audience, use: `sts.amazonaws.com`. This is like the OAuth.
+
+3. Click on _Add Provider_. We have the provider created.
+4. We have to assign a role to this provider. Go to IAM -> Roles. Create a role named with S3FullAccess and CodeDeployFullAccess to the identity provider. As this role will be used in GitHub Actions, you can name this role as "GitHub-Actions-Deploy-Role". (_Note-_ Role name can be as per your choice)
+5. Create a GitHub Actions YAML file in your project's workflow (.github/workflows) which manages the CI/CD.
+6. This Actions file contains one secret (IAMROLE_GITHUB) which needs to be added to GitHub's settings.<br /> For this go to your repo's Settings -> scroll down to Security -> Secrets -> Actions. Click on _New repository secret_, get the _arn_ of "GitHub-Actions-Deploy-Role" and paste it here. This secret will be accessed in the workflow.
 
 ## Usage <a name = "usage"></a>
 
