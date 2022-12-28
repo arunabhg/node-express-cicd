@@ -65,4 +65,4 @@ jobs:
           role-to-assume: ${{ secrets.IAMROLE_GITHUB }}
           aws-region: ${{ env.AWS_REGION }}
       - run: |
-          aws deploy create-deployment --application-name node-app --deployment-group-name ec2-app --s3-location bucket=tnode-express-cicd-artifact,key=code-deploy/project.zip,bundleType=zip
+          aws deploy create-deployment --application-name node-app --deployment-group-name ec2-app --s3-location bucket=node-express-cicd-artifact,key=code-deploy/project.zip,bundleType=zip
