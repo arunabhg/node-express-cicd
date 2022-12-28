@@ -8,9 +8,10 @@
 	- [Getting Started ](#getting-started-)
 		- [Prerequisites](#prerequisites)
 		- [Steps ](#steps-)
-			- [Step 1 - Set up EC2, IAM roles](#step-1---set-up-ec2-iam-roles)
+			- [Step 1 - Set up EC2, S3 Bucket, IAM roles](#step-1---set-up-ec2-s3-bucket-iam-roles)
 			- [Step 2 - Configure GitHub Actions using OIDC](#step-2---configure-github-actions-using-oidc)
 			- [Step 3 - Set up CodeDeploy](#step-3---set-up-codedeploy)
+			- [Step 4 - Set up a S3](#step-4---set-up-a-s3)
 	- [Usage ](#usage-)
 
 ## About <a name = "about"></a>
@@ -29,7 +30,7 @@ See [OIDC](https://docs.github.com/en/actions/deployment/security-hardening-your
 
 ### Steps <a name = "steps"></a>
 
-#### Step 1 - Set up EC2, IAM roles
+#### Step 1 - Set up EC2, S3 Bucket, IAM roles
 
 1. Login to AWS console and go to **_EC2 dashboard_**.
 2. Click on **_Launch Template_** under Instances. A _launch template_ allows you to create a saved instance configuration that can be reused, shared and launched at a later time.
@@ -84,6 +85,10 @@ systemctl enable node-api.service
 systemctl start node-api.service
 ```
 
+**Explanation:** In the above shell script first we add a logger, and install node. Then we install ruby. We install the aws codedeploy and s3 bucket for our region. Add a logfile and start the codedeploy-agent. <br />
+We create a sub-directory named 'node-codedeploy' inside another directory named 'Code' in the home of our EC2 instance.<br />
+We create a node-api.service systemd service file and use the cat command to write to it. We enable the service and start it.
+
 15. Click on Create Launch Template to successfully create the template.
 16. We can create multiple versions of the template to use a default version.
 17. To create an instance from this template, select the template, go to _Actions_ -> _Launch instance from template_. Keep everything default and click on _Launch Instance_ to create a new server instance. <br />
@@ -119,6 +124,8 @@ systemctl start node-api.service
 10. In AWS CodeDeploy Agent, select _Never_ as we will be deploying the code using User Data.
 11. In Deployment Settings, _CodeDeploy.DefaultAllAtOnce_ should be selected.
 12. Uncheck the Load Balancer, as we won't be using it. Click on _Create Deployment Group_.
+
+#### Step 4 - Set up a S3
 
 ## Usage <a name = "usage"></a>
 
