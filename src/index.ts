@@ -5,7 +5,7 @@ const port = 3000;
 
 app.get("/", (req: Request, res: Response) => {
 	res.send(
-		"<h1>Node Express TypeScript App</h1> <h4>Hello World from Node & Express CI-CD!</h4> <p>Version 1.0</p>"
+		"<h1>Node Express TypeScript App</h1> <h4>Hello World from Node + TS & Express CI-CD!</h4> <p>Version 1.0</p>"
 	);
 });
 
