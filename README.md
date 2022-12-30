@@ -132,7 +132,7 @@ hooks:
 2. Check if it's running fine on port 3000.
 3. Make some changes in your code and check if the pipeline is successful.
 4. Check if your changes are visible in the EC2's IP by checking against port 3000.
-5. If everything is fine, you have created a CI/CD for a node-app.
+5. If everything is fine, you have created a CI/CD pipeline for a node application.
 
 ## Usage <a name = "usage"></a>
 
