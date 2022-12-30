@@ -131,8 +131,9 @@ hooks:
 1. Go back to the EC2 instance & copy it's public IP.
 2. Check if it's running fine on port 3000.
 3. Make some changes in your code and check if the pipeline is successful.
-4. Check if your changes are visible in the EC2's IP by checking against port 3000.
-5. If everything goes fine, you have created a CI/CD pipeline for a node application.
+4. Check if your changes are visible in the public IP for port 3000.
+5. For every change you commit to your repo, it should be visible in a few minutes in the public IP.
+6. If everything goes fine, you have created a CI/CD pipeline for your application.
 
 ## Usage <a name = "usage"></a>
 
