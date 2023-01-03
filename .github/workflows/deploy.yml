@@ -44,7 +44,7 @@ jobs:
       # Copy build directory to S3
       - name: Copy build to S3
         run: |
-          zip -r project.zip . -x node_modules\* dist\* .git\*
+          zip -r project.zip . -x node_modules\* .git\*
           aws s3 cp project.zip s3://node-express-cicd-artifact/code-deploy/project.zip
 
   deploy:
