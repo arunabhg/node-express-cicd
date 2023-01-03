@@ -2,15 +2,15 @@
 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 
 curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
-yum install -y nodejs
+sudo yum install -y nodejs
 
-yum -y update
-yum install ruby
-yum install -y wget
+sudo yum -y update
+sudo yum install ruby
+sudo yum install -y wget
 wget https://aws-codedeploy-ap-south-1.s3.ap-south-1.amazonaws.com/latest/install
 chmod +x ./install
 ./install auto > /tmp/logfile
-service codedeploy-agent restart
+sudo service codedeploy-agent restart
 
 echo "Create Code directory"
 mkdir -p /home/ec2-user/node-codedeploy
