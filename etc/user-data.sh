@@ -2,11 +2,11 @@
 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 
 curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
-apt-get install -y nodejs
+yum install -y nodejs
 
-apt update
-apt install ruby-full -y
-apt install wget -y
+yum -y update
+yum install ruby
+yum install -y wget
 wget https://aws-codedeploy-ap-south-1.s3.ap-south-1.amazonaws.com/latest/install
 chmod +x ./install
 ./install auto > /tmp/logfile
