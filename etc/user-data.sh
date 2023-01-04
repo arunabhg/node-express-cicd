@@ -5,15 +5,16 @@ curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
 sudo yum install -y nodejs
 
 sudo yum -y update
-sudo yum install ruby
-sudo yum install -y wget
+sudo yum -y install ruby
+sudo yum -y install wget
+cd /home/ec2-user
 wget https://aws-codedeploy-ap-south-1.s3.ap-south-1.amazonaws.com/latest/install
-chmod +x ./install
-./install auto > /tmp/logfile
+sudo chmod +x ./install
+sudo ./install auto > /tmp/logfile
 sudo service codedeploy-agent restart
 
 echo "Create Code directory"
-mkdir -p /home/ec2-user/node-codedeploy
+mkdir -p /node-codedeploy
 
 touch /etc/systemd/system/node-api.service
 bash -c 'cat <<EOT > /etc/systemd/system/node-api.service
