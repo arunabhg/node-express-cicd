@@ -2,7 +2,7 @@
 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 
 curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
-sudo yum install -y nodejs
+sudo yum -y install nodejs
 
 sudo yum -y update
 sudo yum -y install ruby
@@ -22,11 +22,13 @@ bash -c 'cat <<EOT > /etc/systemd/system/node-api.service
 Description=Nodejs hello world App
 Documentation=https://example.com
 After=network.target
+
 [Service]
 Type=simple
 User=ec2-user
 ExecStart=/usr/bin/node /home/ec2-user/node-codedeploy/index.js
 Restart=on-failure
+
 [Install]
 WantedBy=multi-user.target
 EOT'
