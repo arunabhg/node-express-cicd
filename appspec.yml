@@ -3,6 +3,7 @@ os: linux
 files:
   - source: /
     destination: /home/ec2-user/node-express-cicd
+    overwrite: true
 hooks:
   # ApplicationStop:
   #   - location: scripts/application_stop.sh
