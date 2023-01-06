@@ -1,7 +1,7 @@
 name: CI/CD Pipeline
 
-on:
 #  workflow_dispatch: {}
+on:
   push:
     branches: { main }
 
@@ -26,15 +26,11 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
-          
+
       # Step 3
       - name: Create Deployment
-        id: deploy            
+        id: deploy
       - run: |
           echo "Deploying branch"
       - run: |
-          aws deploy create-deployment \
-        --application-name nodejs-express-app \
-        --deployment-group-name nodejs-express-app-d1 \
-        --deployment-config-name CodeDeployDefault.OneAtATime \
-        --github-location repository=${{ github.repository }},commitId=${{ github.sha }}
+          aws deploy create-deployment --application-name nodejs-express-app --deployment-group-name nodejs-express-app-d1 --deployment-config-name CodeDeployDefault.OneAtATime --github-location repository=${{ github.repository }},commitId=${{ github.sha }}
