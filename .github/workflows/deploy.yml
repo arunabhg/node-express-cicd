@@ -1,9 +1,8 @@
 name: CI/CD Pipeline
-
-#  workflow_dispatch: {}
 on:
   push:
-    branches: { main }
+    branches: [main]
+    #  workflow_dispatch: {}
 
 env:
   AWS_REGION: "ap-south-1"
