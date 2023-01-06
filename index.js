@@ -3,9 +3,11 @@ import express from "express";
 const app = express();
 const port = 3000;
 
+const version = 2.222222;
+
 app.get("/", (req, res) => {
 	res.send(
-		"<h1>Node Express App</h1> <h4>Hello World from Node & Express CI-CD!</h4> <p>Version 2.2222</p>"
+		`<h1>Node Express App</h1> <h4>Hello World from Node & Express CI-CD!</h4> <h3 style="color: blue">Version ${version}</h3>`
 	);
 });
 
