@@ -5,7 +5,7 @@ const port = 3000;
 
 app.get("/", (req, res) => {
 	res.send(
-		"<h1>Node Express App</h1> <h4>Hello World from Node & Express CI-CD!</h4> <p>Version 1.0001</p>"
+		"<h1>Node Express App</h1> <h4>Hello World from Node & Express CI-CD!</h4> <p>Version 2.2222</p>"
 	);
 });
 
