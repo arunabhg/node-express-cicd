@@ -30,6 +30,4 @@ jobs:
       - name: Create Deployment
         id: deploy
       - run: |
-          echo "Deploying branch"
-      - run: |
           aws deploy create-deployment --application-name nodejs-express-app --deployment-group-name nodejs-express-app-d1 --deployment-config-name CodeDeployDefault.OneAtATime --github-location repository=${{ github.repository }},commitId=${{ github.sha }}
