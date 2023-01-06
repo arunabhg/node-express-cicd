@@ -1,18 +1,23 @@
 #!/bin/bash
 
-#give permission for everything in the express-app directory
-sudo chmod -R 777 /home/ec2-user/node-codedeploy
+echo 'run application_start.sh: ' >> /home/ec2-user/node-express-cicd/deploy.log
 
-#navigate into our working directory where we have all our github files
-cd /home/ec2-user/node-codedeploy
+echo 'pm2 restart node-express-cicd' >> /home/ec2-user/node-express-cicd/deploy.log
+pm2 restart node-express-cicd >> /home/ec2-user/node-express-cicd/deploy.log
 
-#add npm and node to path
-export NVM_DIR="$HOME/.nvm"	
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # loads nvm	
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # loads nvm bash_completion (node is in path now)
+# #give permission for everything in the express-app directory
+# sudo chmod -R 777 /home/ec2-user/node-codedeploy
 
-#install node modules
-npm install
+# #navigate into our working directory where we have all our github files
+# cd /home/ec2-user/node-codedeploy
 
-#start our node app in the background
-node index.js > app.out.log 2> app.err.log < /dev/null & 
+# #add npm and node to path
+# export NVM_DIR="$HOME/.nvm"	
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # loads nvm	
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # loads nvm bash_completion (node is in path now)
+
+# #install node modules
+# npm install
+
+# #start our node app in the background
+# node index.js > app.out.log 2> app.err.log < /dev/null & 
