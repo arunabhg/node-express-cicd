@@ -2,8 +2,8 @@
 
 echo 'run application_start.sh: ' >> /home/ec2-user/node-express-cicd/deploy.log
 
-echo 'pm2 restart node-express-cicd' >> /home/ec2-user/node-express-cicd/deploy.log
-pm2 restart node-express-cicd >> /home/ec2-user/node-express-cicd/deploy.log
+echo 'pm2 restart nodejs-express-app' >> /home/ec2-user/node-express-cicd/deploy.log
+pm2 restart nodejs-express-app >> /home/ec2-user/node-express-cicd/deploy.log
 
 # #give permission for everything in the express-app directory
 # sudo chmod -R 777 /home/ec2-user/node-codedeploy
