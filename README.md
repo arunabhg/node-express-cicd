@@ -3,22 +3,21 @@
 ## Table of Contents
 
 - [node-express-cicd](#node-express-cicd)
-	- [Table of Contents](#table-of-contents)
-	- [About ](#about-)
-	- [Getting Started ](#getting-started-)
-		- [Prerequisites](#prerequisites)
-		- [Steps ](#steps-)
-			- [Step 1 - Set up EC2, and IAM roles](#step-1---set-up-ec2-and-iam-roles)
-			- [Step 2 - Create appspec.yml file and shell scripts for code deploy](#step-2---create-appspecyml-file-and-shell-scripts-for-code-deploy)
-			- [Step 3 - Set up CodeDeploy](#step-3---set-up-codedeploy)
-			- [Step 4 - Set up Pipeline](#step-4---set-up-pipeline)
-			- [Step 5 - Test the deployed code](#step-5---test-the-deployed-code)
-	- [Fix AWS CodeDeploy Failures ](#fix-aws-codedeploy-failures-)
-			- [Deploy process fails at first step with error - Application stop Failed with exit code 1](#deploy-process-fails-at-first-step-with-error---application-stop-failed-with-exit-code-1)
+  - [Table of Contents](#table-of-contents)
+  - [About ](#about-)
+  - [Getting Started ](#getting-started-)
+    - [Prerequisites](#prerequisites)
+    - [Steps ](#steps-)
+      - [Step 1 - Set up EC2, and IAM roles](#step-1---set-up-ec2-and-iam-roles)
+      - [Step 2 - Create appspec.yml file and shell scripts for code deploy](#step-2---create-appspecyml-file-and-shell-scripts-for-code-deploy)
+      - [Step 3 - Set up CodeDeploy](#step-3---set-up-codedeploy)
+      - [Step 4 - Set up Pipeline](#step-4---set-up-pipeline)
+      - [Step 5 - Test the deployed code](#step-5---test-the-deployed-code)
+  - [Fix AWS CodeDeploy Failures ](#fix-aws-codedeploy-failures-) - [Deploy process fails at first step with error - Application stop Failed with exit code 1](#deploy-process-fails-at-first-step-with-error---application-stop-failed-with-exit-code-1)
 
 ## About <a name = "about"></a>
 
-A project template for creating a CI/CD pipeline to deploy a Node-Express TypeScript project in EC2 stored in S3 bucket using GitHub Actions and OIDC.
+A project template for creating a CI/CD pipeline to automatically deploy a Node-Express project to EC2 using GitHub Actions and AWS CodeDeploy.
 
 ## Getting Started <a name = "getting_started"></a>
 
@@ -26,47 +25,112 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-You will need a GitHub repo, an AWS account and knowledge of what exactly are EC2, S3, IAM Roles.
+You will need a GitHub repo, an AWS account and knowledge of what exactly are EC2, IAM Roles, GitHub Actions and CodeDeploy.
 
 ### Steps <a name = "steps"></a>
 
-#### Step 1 - Set up EC2, and IAM roles
+### Step 1 - Set up EC2 instance
 
-1. Login to AWS console and go to **_EC2 dashboard_**.
-2. Click on **_Launch Template_** under Instances. A _launch template_ allows you to create a saved instance configuration that can be reused, shared and launched at a later time.
-3. Click on **_Create Launch Template_**, if one isn't already created.
-4. Give a template name, description, uncheck the Auto Scaling Guidance and we don't need to select a Source Template, if we are starting from scratch.
-5. Click on Quick start to select the AMI & instance type. In our case we're selecting 64-bit Linux t2.micro.
-6. If you have a key-pair downloaded in your machine, select it from the dropdown; otherwise create one by clicking on the _Create a new key pair_ link.
-7. If you already have a Security Group created, select that from dropdown; otherwise create a security group having All inbound open (0.0.0.0) to port 3000. We don't need to SSH in this case. Opening port 3000 is enough.
-8. Stick with the default storage.
-9. In the resource tags, we'll add two resource tags having key-value of `template`-`yes` and `Name`-`node-server`. These key-value pairs will be applied to all resource tags which are of instances types.
-10. We want all EC2 instances created from this launch template to have a role of CodeDeploy. So before proceeding further with the Advanced Details, we have to create IAM roles for CodeDeploy.
-11. Open IAM -> Roles. Search for CodeDeploy service -> CodeDeploy. Save it as CodeDeployRole.
-12. Create _another_ role by selecting EC2 and searching for CodeDeploy. Choose AmazonEC2RoleForAWSCodeDeploy and save the role as EC2CodeDeployRole.
-13. Going back to the Launch template, under Advanced details, choose EC2CodeDeployRole in IAM Instance Profile.
-14. Leave rest other default options blank.
-15. Finally, in User Data add the following shell script for deploying and running the project.
+#### 1. Login to AWS console and go to **_EC2 dashboard_**.
 
-```shell
+#### 2. Click on **_Launch Instance_** under Instances.
 
-#!/bin/bash
-sudo yum -y update
-sudo yum -y install ruby
-sudo yum -y install wget
-cd /home/ec2-user
-wget https://aws-codedeploy-ap-south-1.s3.amazonaws.com/latest/install
-sudo chmod +x ./install
-sudo ./install auto
+#### 3. Give an instance name, description.
+
+#### 4. Click on Quick start to select the AMI & instance type. In our case we're using a 64-bit Linux t2.micro.
+
+#### 5. If you have a key-pair downloaded in your machine, select it from the dropdown; otherwise create one by clicking on the _Create a new key pair_ link.
+
+#### 6. If you already have a Security Group created, select that from dropdown; otherwise create a security group having All inbound open (0.0.0.0) to TCP ports 3000, and 80 and to SSH port 22.
+
+#### 7. Stick with the default storage or use the gp3 storage as it's newer.
+
+### Step 2 - Configure IAM Roles
+
+#### 1. Before proceeding further, we have to create IAM roles for EC2 and CodeDeploy.
+
+#### 2. Open IAM -> Roles in a new tab. Search for CodeDeploy service -> CodeDeploy. Save it as **CodeDeployRole**.
+
+#### 3. Create _another_ role by selecting EC2 and searching for CodeDeploy. Choose **_AmazonEC2RoleForAWSCodeDeploy_** and save the role as **EC2CodeDeployRole**.
+
+#### 4. Going back to the EC2 instance, under IAM role, choose EC2CodeDeployRole in IAM Instance Profile.
+
+#### 5. Leave rest other default options blank. Click on Launch Instance to successfully launch EC2 instance.
+
+### Step 3 - SSH to Linux EC2 and install node, nvm and pm2
+
+#### 1. If you have a Windows machine use Putty else use the terminal in Mac/Linux to SSH into the AMI.
+
+```sh
+sudo yum update
 ```
 
-**Explanation:** In the above shell script first we update. Then we install ruby and install wget. We cd into our ec2-user folder in home directory. We install codedeploy and s3 bucket for our region.<br />
+```sh
+sudo yum upgrade
+```
 
-1.  Click on Create Launch Template to successfully create the template.<br/> _Note-_ We can create multiple versions of the template and use one as a default version.
-2.  To create an instance from this template, select the template, go to _Actions_ -> _Launch instance from template_. Keep everything default and click on _Launch Instance_ to create a new server instance. <br />
-    The EC2 instance created will have a name of _node-server_ which we had specified in the resource tag (in Step 9).
+```sh
+sudo yum install -y git htop wget
+```
 
-#### Step 2 - Create appspec.yml file and shell scripts for code deploy
+1.1 Install Node
+To install or update nvm, you should run the [install script][2]. To do that, you may either download and run the script manually, or use the following cURL or Wget command:
+
+```sh
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+```
+
+Or
+
+```sh
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+```
+
+Running either of the above commands downloads a script and runs it. The script clones the nvm repository to ~/.nvm, and attempts to add the source lines from the snippet below to the correct profile file (~/.bash_profile, ~/.zshrc, ~/.profile, or ~/.bashrc).
+
+1.2 Copy & Paste (each line separately)
+
+```sh
+export NVM_DIR="$HOME/.nvm"
+```
+
+```sh
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+```
+
+```sh
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+```
+
+1.3 Verify that nvm has been installed
+
+```sh
+nvm --version
+```
+
+1.4 Install node
+
+```sh
+nvm install --lts # Latest stable node js server version or replace --lts with a stable nodejs version no
+```
+
+1.5 Check nodejs installation
+
+```sh
+node --version
+```
+
+1.6 Check npm installed
+
+```sh
+npm -v
+```
+
+2
+
+### Step 2
+
+- Create appspec.yml file and shell scripts for code deploy
 
 1. Create an **_appspec.yml_** file in your project's root directory which is required for code deploy.
 2. It includes the version no of the app, the os on which it needs to be deployed, the file source, the file destination on the server, the actions (hooks) that we will run on the files which includes an application start script, before install and an application ending script. It's structure -
@@ -111,23 +175,7 @@ hooks:
 10. In Deployment Settings, _CodeDeploy.DefaultAllAtOnce_ should be selected.
 11. Uncheck the Load Balancer, as we have only one instance & we won't need it. Click on _Create Deployment Group_.
 
-#### Step 4 - Set up Pipeline
-
-1. Go to Pipeline -> Create Pipeline.
-2. Give the pipeline a name. For eg., `node-app-pipeline`.
-3. AWS creates a Service Role automatically based on the pipeline name.
-4. We can choose a default location to hold the source code/deployment package. We can choose a custom S3 bucket OR let CodePipeline create the default bucket for you. If it's a small app, we can choose default location. For production, we should specify a custom S3 bucket.
-5. Click Next & Select GitHub (version 2) in Source.
-6. In Connection, choose a connection if you already have one. If it's your first time connecting to Pipeline, click on Connect to GitHub.
-7. Give the connection a name & click Connect to GitHub. Click Install a New App, Sign in to GitHub & select which repository you want to give access to. Click Save & then hit Connect to create a connection.
-8. Once the connection is made successfully, choose the repo name and branch name.
-9. Click Next.
-10. You can skip the optional build stage & click Next.
-11. In Deploy part, select your AWS CodeDeploy as Deploy Provider, your application name, the name of the deployment group, and click Next.
-12. Preview the details you entered for the pipeline. If everything looks okay, click on Create Pipeline.
-13. Once the Pipeline is created, you can check each part by clicking on View Details and see if the Pipeline is successfully running.
-
-#### Step 5 - Test the deployed code
+#### Step 4 - Test the deployed code
 
 1. Go back to the EC2 instance & copy it's public IP.
 2. Check if it's running fine on port 3000.
