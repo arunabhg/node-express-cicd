@@ -1,9 +1,9 @@
+<h1>Node-Express-CICD</h1>
+
 # How to set CI/CD for a Node.js/Express app using GitHub Actions and AWS CodeDeploy
 
 ## Table of Contents
 
-- [node-express-cicd](#node-express-cicd)
-  - [Table of Contents](#table-of-contents)
   - [About ](#about-)
   - [Getting Started ](#getting-started-)
     - [Prerequisites](#prerequisites)
@@ -339,3 +339,5 @@ sudo service codedeploy-agent start
    ```
 6. Check the codedeploy-agent service is running or not. If the following command throws an error, codedeploy-agent hasn't been installed but if it returns a PID, it is installed & running - `sudo service codedeploy-agent status`.
 7. Make some small updates in your code and push to your repository. This time code deploy should succeed.
+  
+ [🔼 Back to top](#node-express-cicd)
