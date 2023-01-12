@@ -1,4 +1,4 @@
-# node-express-cicd
+# How to set CI/CD for a Node.js/Express app using GitHub Actions and AWS CodeDeploy
 
 ## Table of Contents
 
@@ -97,7 +97,7 @@ Or
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 ```
 
-Running either of the above commands downloads a script and runs it. The script clones the nvm repository to ~/.nvm, and attempts to add the source lines from the snippet below to the correct profile file (~/.bash_profile, ~/.zshrc, ~/.profile, or ~/.bashrc).
+Running either of the above commands downloads a script and runs it. The script clones the nvm repository to \~/.nvm, and attempts to add the source lines from the snippet below to the correct profile file (\~/.bash_profile, ~/.zshrc, ~/.profile, or ~/.bashrc).
 
 3.3 Copy & Paste (each line separately)
 
@@ -128,7 +128,7 @@ nvm install --lts # Latest stable node js server version or replace --lts with a
 3.6 Check nodejs installation
 
 ```sh
-node --version
+node -v
 ```
 
 3.7 Check npm installed
@@ -147,7 +147,7 @@ cd /home/ec2-user
 git clone https://github.com/arunabhg/node-express-cicd.git
 ```
 
-**_Note-_** Replace the repository link with your relevant repo.
+**_Note-_** Replace the repository link with your relevant repo link.
 
 ### Step 5 - Configure appspec.yml and hooks
 
@@ -301,19 +301,19 @@ sudo service codedeploy-agent start
 
 12.7 If all steps proceed without any error, connection with GitHub is successful. Move to last step.
 
-### Step 13 - Test Deployment
+### Step 13 - Test the Deployment
 
-12.1 Go back to the EC2 instance & copy it's public IP.
+13.1 Go back to the EC2 instance & copy it's public IP.
 
-12.2 Check if it's running fine on port 3000.
+13.2 Check if it's running fine on port 3000.
 
-12.3. Again commit some changes in your code and check if the CI/CD process is successful, from GitHub Actions to CodeDeploy.
+13.3. Again commit some changes in your code and check if the CI/CD process is successful, from GitHub Actions to CodeDeploy.
 
-12.4 Check if your changes are visible in the public IP for port 3000.
+13.4 Check if your changes are visible in the public IP for port 3000.
 
-12.5 For every change you commit to your repo, it should be visible in a few minutes in the public IP.
+13.5 For every change you commit to your repo, it should be visible in a few minutes in the public IP.
 
-12.6. If everything goes fine, you have created a CI/CD pipeline for your application.
+13.6. If everything goes fine, you have created a working CI/CD pipeline for your application.
 
 ## Fix AWS CodeDeploy Failures <a name = "fixes"></a>
 
