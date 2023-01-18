@@ -3,7 +3,7 @@ import express from "express";
 const app = express();
 const port = 3000;
 
-const version = 2.3003003;
+const version = 2.333333;
 
 app.get("/", (req, res) => {
 	res.send(
