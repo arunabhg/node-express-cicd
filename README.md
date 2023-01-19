@@ -4,6 +4,8 @@
 
 ## Table of Contents
 
+- [How to set CI/CD for a Node.js/Express app using GitHub Actions and AWS CodeDeploy](#how-to-set-cicd-for-a-nodejsexpress-app-using-github-actions-and-aws-codedeploy)
+  - [Table of Contents](#table-of-contents)
   - [About ](#about-)
   - [Getting Started ](#getting-started-)
     - [Prerequisites](#prerequisites)
@@ -22,7 +24,8 @@
       - [Create Application](#create-application)
       - [Create Deployment Group](#create-deployment-group)
     - [Step 12 - Connect CodeDeploy with GitHub](#step-12---connect-codedeploy-with-github)
-    - [Step 13 - Test Deployment](#step-13---test-deployment)
+    - [Step 13 - Configure deploy.yml and add an IAM user for programmatic access](#step-13---configure-deployyml-and-add-an-iam-user-for-programmatic-access)
+    - [Step 14 - Test the Deployment](#step-14---test-the-deployment)
   - [Fix AWS CodeDeploy Failures ](#fix-aws-codedeploy-failures-)
       - [Deploy process fails at first step with error - Application stop Failed with exit code 1](#deploy-process-fails-at-first-step-with-error---application-stop-failed-with-exit-code-1)
 
@@ -277,11 +280,11 @@ sudo service codedeploy-agent start
 
 11.7. Keep the default in-place selection for Deployment Type.
 
-11.8 Select the EC2 instance by it's `Name` key which we had set as `node-server`. When you select this, it should show the Matching instances. If this was your first instance with this key, it will say, `1 unique matched instance`.
+11.8 Choose the _Amazon EC2 instance_ option in Environment Configurations. Select the tag by it's `Name` key which we had set as `node-server`. When you select this, it should show the Matching instances. If this was your first instance with this key, it will say, `1 unique matched instance`.
 
 11.9 For Agent Configuration. leave as default.
 
-11.10. In Deployment Settings, _CodeDeploy.OneAtATime_ should be selected.
+11.10. In Deployment Settings, select `CodeDeployDefault.OneAtATime`, as we have one server and we want to deploy to it only.
 
 11.11 Uncheck the Load Balancer, as we have only one instance & we won't need it. Click on _Create Deployment Group_.
 
@@ -299,21 +302,31 @@ sudo service codedeploy-agent start
 
 12.6 Save and wait for CodeDeploy to finish all steps.
 
-12.7 If all steps proceed without any error, connection with GitHub is successful. Move to last step.
+12.7 If all steps proceed without any error, connection with GitHub is successful. Move to next step.
 
-### Step 13 - Test the Deployment
+### Step 13 - Configure deploy.yml and add an IAM user for programmatic access
 
-13.1 Go back to the EC2 instance & copy it's public IP.
+13.1 Create new user named `github_deploy` in IAM with Access key or programmatic access.
 
-13.2 Check if it's running fine on port 3000.
+13.2 Attach the `AWSCodeDeployFullAccess` policy and create the user.
 
-13.3. Again commit some changes in your code and check if the CI/CD process is successful, from GitHub Actions to CodeDeploy.
+13.3 Use it's Access Key ID and Secret access key to create GitHub secrets AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY respectively.
 
-13.4 Check if your changes are visible in the public IP for port 3000.
+13.4 Use the template in deploy.yml.
 
-13.5 For every change you commit to your repo, it should be visible in a few minutes in the public IP.
+### Step 14 - Test the Deployment
 
-13.6. If everything goes fine, you have created a working CI/CD pipeline for your application.
+14.1 Go back to the EC2 instance & copy it's public IP.
+
+14.2 Check if it's running fine on port 3000.
+
+14.3. Again commit some changes in your code and check if the CI/CD process is successful, from GitHub Actions to CodeDeploy.
+
+14.4 Check if your changes are visible in the public IP for port 3000.
+
+14.5 For every change you commit to your repo, it should be visible in a few minutes in the public IP.
+
+14.6. If everything goes fine, you have created a working CI/CD pipeline for your application.
 
 ## Fix AWS CodeDeploy Failures <a name = "fixes"></a>
 
@@ -339,5 +352,5 @@ sudo service codedeploy-agent start
    ```
 6. Check the codedeploy-agent service is running or not. If the following command throws an error, codedeploy-agent hasn't been installed but if it returns a PID, it is installed & running - `sudo service codedeploy-agent status`.
 7. Make some small updates in your code and push to your repository. This time code deploy should succeed.
-  
- [🔼 Back to top](#node-express-cicd)
+
+[🔼 Back to top](#node-express-cicd)
