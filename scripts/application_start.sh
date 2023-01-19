@@ -1,18 +1,18 @@
 #!/bin/bash
 
-#give permission for everything in the express-app directory
-sudo chmod -R 777 /home/ec2-user/node-express-cicd
+# #give permission for everything in the express-app directory
+# sudo chmod -R 777 /home/ec2-user/node-express-cicd
 
-#navigate into our working directory where we have all our github files
-cd /home/ec2-user/node-express-cicd
+# #navigate into our working directory where we have all our github files
+# cd /home/ec2-user/node-express-cicd
 
 echo 'run application_start.sh: ' >> /home/ec2-user/node-express-cicd/deploy.log
 
-#install node modules
-npm install
+# #install node modules
+# npm install
 
-echo 'pm2 start npm start' >> /home/ec2-user/node-express-cicd/deploy.log
-sudo pm2 start 'npm start'
+echo 'pm2 restart nodejs-express-app' >> /home/ec2-user/node-express-cicd/deploy.log
+sudo pm2 restart nodejs-express-app >> /home/ec2-user/node-express-cicd/deploy.log
 
 
 # #add npm and node to path
