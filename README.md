@@ -1,10 +1,10 @@
 <h1>Node-Express-CICD</h1>
 
-# How to set CI/CD for a Node.js/Express app using GitHub Actions and AWS CodeDeploy
+# How to CI/CD a Node.js/Express app using GitHub Actions and AWS CodeDeploy
 
 ## Table of Contents
 
-- [How to set CI/CD for a Node.js/Express app using GitHub Actions and AWS CodeDeploy](#how-to-set-cicd-for-a-nodejsexpress-app-using-github-actions-and-aws-codedeploy)
+- [How to CI/CD a Node.js/Express app using GitHub Actions and AWS CodeDeploy](#how-to-cicd-a-nodejsexpress-app-using-github-actions-and-aws-codedeploy)
   - [Table of Contents](#table-of-contents)
   - [About ](#about-)
   - [Getting Started ](#getting-started-)
